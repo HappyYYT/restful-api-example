@@ -1,0 +1,51 @@
+- Here are the steps to build a restful api server by nodeJS.
+- 1.  cd server -> npm init -y (result: package.json generates)
+- 2.  npm i -D nodemon (result: package-lock.json and node_modules generate)
+- 3.  open package.json and update "scripts"
+- `"scripts": {"start":"node server.js", "dev": "nodemon server.js"}`
+- 4. create server.js
+- `const http = require("http");const server = http.createServer((req, res) => {console.log(123)});const PORT = process.env.PORT || 5000;server.listen(PORT, () => console.log(`Server running on port ${PORT}`));`
+
+- 5. npm run dev
+- 6. open postman and input `http://localhost:5000` (result: print 123 in TERMINAL)
+
+- 7. Now We change server.js's server:
+- `const server = http.createServer((req, res) => { res.statusCode = 200; res.setHeader("Content-Type", "text/html"); res.write("<h1>Hello World </h1>"); res.end(); })`
+- 8. open `http://localhost:5000/` in browser or open it in postman.You will see "Hello World" in browser and `<h1>Hello World</h1>` at body(but `Hello World` at preview) in postman.
+- 9. update server.js
+- `const books = require("./data/books");const server = http.createServer((req, res) => { res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify(books)); });`
+- 10. open `localhost:5000` in browser you will receive json data whatever add `/xxx`; input `localhost:5000` in postman you will receive the same thing whatever you use get/post... method.
+- 11. Exact Match URL by `if`
+- `const server = http.createServer((req, res) => { if (req.url === "/api/books") { res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify(books)); } else { res.writeHead(404, { "Content-Type": "application/json" }); res.end(JSON.stringify({ message: "Route Not Found" })); } });` but you still can receive json data by get/post... method
+- 12. so we add if's condition `if(... && req.method === 'GET')` and you can only receive json data by get method
+- 13. we create 2 documents named controllers and models(mvc yes!). and create bookModel.js in models,create bookController.js in controllers.Then remove some of server.js's code into bookModel and bookController.
+- bookModel: `const books = require("../../data/books");function findAll() {return new Promise((resolve, reject) => {resolve(books);});}module.exports = { findAll, }; `
+- bookController: `const Book = require('../models/bookModel');async function getBooks(req, res) {try {const books = await Book.findAll(); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify(books)); } catch (error) {console.log(error);}} module.exports = {getBooks,}; `
+- 14. we want to open the url `localhost:5000/api/books/:id`
+- server.js: `if(... req.method === 'GET'){...} else if (req.url.match(/\/api\/books\/([0-9]+)/) && req.method ==='GET'){const id = req.url.split('/')[3];getBook(req, res, id);}` and add import `const {getBooks, getBook] = .....`
+- bookController.js: `async function getBook(req, res, id) { try { const book = await Book.findById(id); if (!book) { res.writeHead(400, { "Content-Type": "application/json" }); res.end(JSON.stringify({ message: "Book Not Found" })); } else { res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify(book)); } } catch (error) { console.log(error); } }module.exports = { getBooks, getBook, };`
+- bookModel.js: `function findById(id) {return new Promise((resolve, reject) => {const book = books.find((b) => b.id === id);resolve(book);});}module.exports = {findAll,findById,};`
+- now you can open the url `localhost:5000/api/books/1` and `localhost:5000/api/books/6`
+- 15.we want to add post method.
+- bookController.js: `async function createBook(req, res, id) {try {const book = { name: "Test Book", author: "YYT" };const newBook =await Book.create(book);res.writeHead(201, { "Content-Type": "application/json" });return res.end(JSON.stringify(newBook)); } catch (error) { console.log(error); } }module.exports = { getBooks, getBook, createBook, };`
+- Ctrl C and then input `npm i uuid` or `npm install uuid` in Terminal.
+- utils/utils.js: `const fs = require("fs");function writeDataToFile(filename, content) {fs.writeFileSync(filename, JSON.stringify(content), "utf8", (err) => {if (err) {console.log(err);}});}module.exports = {writeDataToFile,}; `
+- bookModel.js: `function create(book) {return new Promise((resolve, reject) => {const newBook = { id: uuidv4(), ...book };books.push(newBook);writeDataToFile("../../data/books.json", books);resolve(newBook);});}module.exports = {findAll,findById,create,};`
+- open url `localhost:5000/api/books` by POST method. Your json file will add new data.
+- 16.If We want to input want we what by post method. Just update bookController.js
+- bookController.js: `async function createBook(req, res, id) {try {let body = "";req.on("data", (chunk) => {body += chunk.toString();});req.on("end", async () => {const { name, author } = JSON.parse(body);const book = { name, author };const newBook = await Book.create(book);res.writeHead(201, { "Content-Type": "application/json" });return res.end(JSON.stringify(newBook));});} catch (error) {console.log(error);} }`
+- turn postman to Body , raw , JSON . Input `{"name": "Test Book2","author": "YYT2"}` and click send. If it's right data will be added into books.json
+- 17. add getPostData function.
+- utils.js `function getPostData(req) { return new Promise((resolve, reject) => { try { let body = ""; req.on("data", (chunk) => { body += chunk.toString(); }); req.on("end", () => { resolve(body); }); } catch (error) { reject(err); } }); module.exports = { writeDataToFile, getPostData, };}`
+- update bookController.js `async function createBook(req, res, id) { try { const body = await getPostData(req); const { name, author } = JSON.parse(body); const book = { name, author }; const newBook = await Book.create(book); res.writeHead(201, { "Content-Type": "application/json" }); return res.end(JSON.stringify(newBook)); } catch (error) { console.log(error); } }`
+- turn postman to Body , raw , JSON . Input `{"name": "Test Book2","author": "YYT2"}` and click send. If it's right data will be added into books.json
+- 18. add put function
+- server.js: `else if ( req.url.match(/\/api\/books\/([0-9])|([a-z])+/) && req.method === "PUT" ) { const id = req.url.split("/")[3]; updateBook(req, res, id); }`
+- bookController.js `async function updateBook(req, res, id) { try { const book = await Book.findById(id); if (!book) { res.writeHead(404, { "Content-Type": "application/json" }); res.end(JSON.stringify({ message: "Book Not Found" })); } else { const body = await getPostData(req); const { name, author } = JSON.parse(body); const bookData = { name: name || book.name, author: author || book.author, }; const updBook = await Book.update(id, bookData); res.writeHead(200, { "Content-Type": "application/json" }); return res.end(JSON.stringify(updBook)); } } catch (error) { console.log(error); } }`
+- bookModel.js `function update(id, book) { return new Promise((resolve, reject) => { const index = books.findIndex((b) => b.id === id); books[index] = { id, ...book }; writeDataToFile("../data/books.json", books); resolve(books[index]); }); }`
+- open `localhost:5000/api/books/:id` in postman by put method and request body (json data)
+- 19. add delete function
+- server.js: `else if ( req.url.match(/\/api\/books\/([0-9])|([a-z])+/) && req.method === "DELETE" ) { const id = req.url.split("/")[3]; deleteBook(req, res, id); }`
+- bookController.js `async function deleteBook(req, res, id) { try { const book = await Book.findById(id); if (!book) { res.writeHead(400, { "Content-Type": "application/json" }); res.end(JSON.stringify({ message: "Book Not Found" })); } else { await Book.remove(id); res.writeHead(200, { "Content-Type": "application/json" }); res.end(JSON.stringify({ message: `Book ${id} removed` })); } } catch (error) { console.log(error); } }`
+- bookModel.js `function remove(id) { return new Promise((resolve, reject) => { books = books.filter((b) => b.id !== id); writeDataToFile("../data/books.json", books); resolve(); }); }`
+- open `localhost:5000/api/books/:id` in postman by delete method and you will receive Book .... removed
