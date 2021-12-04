@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+      integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+      crossorigin="anonymous"
+    />
+    <title>RestfulApiExample</title>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-input">
+          <h1>Restful Api Example For Books</h1>
+          <div class="input-search-item">
+            <input type="text" id="search-input" placeholder="Enter to search your book">
+            <div class="icon-search">
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+          <div class="input-content-item">
+            <input type="text" id="name-input" placeholder="Name">
+            <input type="text" id="author-input" placeholder="Author">
+            <button class="add-btn">add</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <section>
+      <div class="container">
+        <div id="tab-content" class="tab-content-item">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>author</th>
+                <th>operator</th>
+              </tr>
+            </thead>
+            <tbody class="tbody">
+              <!-- <tr>
+                <td>Monthly price after free month ends on 6/19/19</td>
+                <td contenteditable="true">$12.99</td>
+                <td contenteditable="true">$15.99</td>
+                <td class="btn-layout"><button class="update-btn">update</button><button class="remove-btn">remove</button></td>
+              </tr> -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+   <footer>
+     Power by <a href="https://github.com/HappyYYT">HappyYYT</a>
+   </footer>
+  </div>
+  </body>
+  <script src="./index.js" type="module"></script>
+</html>

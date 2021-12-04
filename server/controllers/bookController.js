@@ -32,8 +32,9 @@ async function getBook(req, res, id) {
 
 // @desc Create a Book
 // @route POST /api/books
-async function createBook(req, res, id) {
+async function createBook(req, res) {
   try {
+    debugger;
     const body = await getPostData(req);
     const { name, author } = JSON.parse(body);
     const book = { name, author };
@@ -42,6 +43,7 @@ async function createBook(req, res, id) {
     return res.end(JSON.stringify(newBook));
   } catch (error) {
     console.log(error);
+    res.writeHead(201, { "Content-Type": "application/json" });
   }
 }
 

@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000;
+}
+
+/* global */
+.container {
+  width: 80%;
+  margin: auto;
+}
+
+input {
+  padding: 0.5rem 1rem;
+  outline: none;
+}
+
+a {
+  color: #fff;
+}
+
+/* header */
+.header-input {
+  color: #fff;
+  text-align: center;
+}
+
+.header-input h1 {
+  padding: 40px 0 40px;
+  color: green;
+}
+
+.input-search-item {
+  position: relative;
+}
+
+.input-search-item #search-input {
+  padding-left: 2rem;
+  width: 30.4rem;
+  font-size: 1.5rem;
+}
+
+.icon-search {
+  position: absolute;
+  top: 50%;
+  /* 50% - #search-input width/2 + itself width/2 + #search-input padding-left/2 */
+  left: calc(50% - 15.2rem + 0.5rem + 0.5rem);
+  transform: translate(-50%, -50%);
+}
+
+.fa-search {
+  color: #222;
+}
+
+.input-content-item {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.add-btn {
+  width: 5rem;
+  height: 2.25rem;
+  background: green;
+}
+
+/* section */
+.table,
+.table-1 {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.table thead th {
+  text-transform: uppercase;
+  padding: 0.8rem;
+  color: #fff;
+}
+
+.table tbody tr td {
+  color: #999;
+  padding: 0.8rem 1.2rem;
+  text-align: center;
+}
+
+.table tbody tr td:first-child,
+.table thead tr th:first-child {
+  text-align: left;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: #222;
+}
+
+.btn-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 2px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.update-btn {
+  background: orange;
+}
+
+.remove-btn {
+  background: red;
+}
+
+/* footer */
+footer {
+  border-top: 1px solid #222;
+  padding: 20px 0;
+  margin-top: 40px;
+  text-align: center;
+  color: #fff;
+}
