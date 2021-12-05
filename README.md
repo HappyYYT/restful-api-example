@@ -1,3 +1,5 @@
+![preview](https://github.com/HappyYYT/restful-api-example/blob/yyt/img/preview.png)
+
 # How to start the server
 
 `cd server`
